@@ -15,6 +15,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.Configure<MongoDBSettings>(builder.Configuration.GetSection("MongoDBSettings"));
 builder.Services.AddSingleton<IMongoDBSettings>(s => s.GetRequiredService<IOptions<MongoDBSettings>>().Value);
 builder.Services.AddSingleton<CidadeService>();
+builder.Services.AddSingleton<EnderecoService>();
 
 var app = builder.Build();
 
