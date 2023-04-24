@@ -1,3 +1,6 @@
+using Microsoft.Extensions.Options;
+using TurismoMongoDB.Config;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +9,13 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Configuration Singleton and AppSettings params
+builder.Services.Configure<MongoDBSettings>(builder.Configuration.GetSection("MongoDBSettings"));
+builder.Services.AddSingleton<IMongoDBSettings>(s => s.GetRequiredService<IOptions<MongoDBSettings>>().Value);
+builder.Services.AddSingleton<CidadeService>();
+builder.Services.AddSingleton<ClienteService>();
+builder.Services.AddSingleton<EnderecoService>();
 
 var app = builder.Build();
 
