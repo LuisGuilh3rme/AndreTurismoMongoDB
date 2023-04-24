@@ -18,7 +18,6 @@ builder.Services.AddSingleton<IMongoDBSettings>(s => s.GetRequiredService<IOptio
 builder.Services.AddSingleton<CidadeService>();
 builder.Services.AddSingleton<EnderecoService>();
 builder.Services.AddSingleton<ClienteService>();
-builder.Services.AddSingleton<Context>();
 
 var app = builder.Build();
 
