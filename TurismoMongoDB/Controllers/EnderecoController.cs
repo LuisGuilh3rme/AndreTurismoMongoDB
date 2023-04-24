@@ -39,7 +39,7 @@ namespace TurismoMongoDB.Controllers
             if (endereco.cidade.Id == "string" || endereco.cidade.Id == String.Empty) endereco.cidade.Id = BsonObjectId.GenerateNewId().ToString();
 
             _enderecoService.Post(endereco);
-            return CreatedAtRoute("GetCidade", new { id = endereco.Id }, endereco);
+            return CreatedAtRoute("GetEndereco", new { id = endereco.Id }, endereco);
         }
 
         [HttpPut("{id:length(24)}")]
@@ -60,6 +60,5 @@ namespace TurismoMongoDB.Controllers
             _enderecoService.Delete(id);
             return Ok();
         }
-
     }
 }
