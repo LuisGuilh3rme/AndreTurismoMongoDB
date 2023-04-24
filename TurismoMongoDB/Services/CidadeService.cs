@@ -18,10 +18,9 @@ namespace TurismoMongoDB.Services
         public List<Cidade> Get() => _cidade.Find(c => true).ToList();
         public Cidade Get(string id) => _cidade.Find(c => c.Id == id).FirstOrDefault();
 
-        public Cidade Post (Cidade cidade)
+        public void Post (Cidade cidade)
         {
             _cidade.InsertOne(cidade);
-            return cidade;
         }
 
         public Cidade Update (Cidade cidade)
