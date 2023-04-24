@@ -6,32 +6,32 @@ namespace TurismoMongoDB.Services
 {
     public class CidadeService
     {
-        private readonly IMongoCollection<Cidade>? _cidade;
+        private readonly Context? _context = new();
 
         public CidadeService(IMongoDBSettings settings)
         {
             var client = new MongoClient(settings.ConnectionString);
             var database = client.GetDatabase(settings.DatabaseName);
-            _cidade = database.GetCollection<Cidade>("cidade");
+            _context.Cidade = database.GetCollection<Cidade>(settings.CidadeCollection);
         }
 
-        public List<Cidade> Get() => _cidade.Find(c => true).ToList();
-        public Cidade Get(string id) => _cidade.Find(c => c.Id == id).FirstOrDefault();
+        public List<Cidade> Get() => _context.Cidade.Find(c => true).ToList();
+        public Cidade Get(string id) => _context.Cidade.Find(c => c.Id == id).FirstOrDefault();
 
         public void Post (Cidade cidade)
         {
-            _cidade.InsertOne(cidade);
+            _context.Cidade.InsertOne(cidade);
         }
 
         public Cidade Update (Cidade cidade)
         {
-            _cidade.ReplaceOne(c => c.Id == cidade.Id, cidade);
+            _context.Cidade.ReplaceOne(c => c.Id == cidade.Id, cidade);
             return cidade;
         }
 
         public void Delete (string id)
         {
-            _cidade.DeleteOne(c => c.Id == id);
+            _context.Cidade.DeleteOne(c => c.Id == id);
         }
     }
 }

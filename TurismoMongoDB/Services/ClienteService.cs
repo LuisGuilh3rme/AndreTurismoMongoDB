@@ -12,9 +12,9 @@ namespace TurismoMongoDB.Services
         {
             var client = new MongoClient(settings.ConnectionString);
             var database = client.GetDatabase(settings.DatabaseName);
-            _context.Cliente = database.GetCollection<Cliente>("cliente");
-            _context.Endereco = database.GetCollection<Endereco>("endereco");
-            _context.Cidade = database.GetCollection<Cidade>("cidade");
+            _context.Cliente = database.GetCollection<Cliente>(settings.ClienteCollection);
+            _context.Endereco = database.GetCollection<Endereco>(settings.EnderecoCollection);
+            _context.Cidade = database.GetCollection<Cidade>(settings.CidadeCollection);
         }
 
         public List<Cliente> Get() => _context.Cliente.Find(c => true).ToList();
