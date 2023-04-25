@@ -34,8 +34,6 @@ namespace TurismoMongoDB.Controllers
         [HttpPost]
         public ActionResult<Cidade> Post(Cidade cidade)
         {
-            if (cidade.Id == "string") cidade.Id = String.Empty;
-
             _cidadeService.Post(cidade);
             return CreatedAtRoute("GetCidade", new { id = cidade.Id }, cidade);
         }
