@@ -43,8 +43,7 @@ namespace TurismoMongoDB.Controllers
         [HttpPut("{id:length(24)}")]
         public ActionResult<Cidade> Update(Cidade cidade)
         {
-            var c = _cidadeService.Get(cidade.Id);
-            if (c == null) return NotFound();
+            if (_cidadeService.Get(cidade.Id) == null) return NotFound();
 
             _cidadeService.Update(cidade);
             return Ok();

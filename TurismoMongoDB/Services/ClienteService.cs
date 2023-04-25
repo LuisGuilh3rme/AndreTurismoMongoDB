@@ -17,9 +17,14 @@ namespace TurismoMongoDB.Services
         }
 
         public List<Cliente> Get() => _collection.Find(c => true).ToList();
-        public Cliente Get(string id) => _collection.Find(c => c.Id == id).FirstOrDefault();
+        public Cliente Get(string id)
+        {
+            if (id == "" || id == "string") return null;
+            return _collection.Find(c => c.Id == id).FirstOrDefault();
+        }
 
-        public Cliente Post(Cliente cliente)
+
+            public Cliente Post(Cliente cliente)
         {
             if (cliente.Id == "" || cliente.Id == "string") cliente.Id = BsonObjectId.GenerateNewId().ToString();
 

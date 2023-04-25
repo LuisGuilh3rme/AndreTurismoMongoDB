@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
+﻿using Microsoft.AspNetCore.Mvc;
 using TurismoMongoDB.Models;
 using TurismoMongoDB.Services;
 
@@ -46,8 +44,10 @@ namespace TurismoMongoDB.Controllers
         [HttpPut("{id:length(24)}")]
         public ActionResult<Endereco> Update(Endereco endereco)
         {
-            var c = _enderecoService.Get(endereco.Id);
-            if (c == null) return NotFound();
+            if (_enderecoService.Get(endereco.Id) == null) return NotFound();
+
+            endereco.cidade = _cidadeService.Get(endereco.cidade.Id);
+            if (endereco.cidade == null) return NotFound();
 
             _enderecoService.Update(endereco);
             return Ok();

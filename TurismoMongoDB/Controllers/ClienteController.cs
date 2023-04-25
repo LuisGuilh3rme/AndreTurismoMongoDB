@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
+﻿using Microsoft.AspNetCore.Mvc;
 using TurismoMongoDB.Models;
 using TurismoMongoDB.Services;
 
@@ -48,8 +46,13 @@ namespace TurismoMongoDB.Controllers
         [HttpPut("{id:length(24)}")]
         public ActionResult<Cliente> Update(Cliente cliente)
         {
-            var c = _clienteService.Get(cliente.Id);
-            if (c == null) return NotFound();
+            if (_clienteService.Get(cliente.Id) == null) return NotFound();
+
+            cliente.endereco.cidade = _cidadeService.Get(cliente.endereco.cidade.Id);
+            if (cliente.endereco.cidade == null) return NotFound();
+
+            cliente.endereco = _enderecoService.Get(cliente.endereco.Id);
+            if (cliente.endereco == null) return NotFound();
 
             _clienteService.Update(cliente);
             return Ok();

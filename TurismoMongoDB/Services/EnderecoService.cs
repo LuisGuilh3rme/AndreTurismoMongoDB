@@ -17,7 +17,11 @@ namespace TurismoMongoDB.Services
         }
 
         public List<Endereco> Get() => _collection.Find(c => true).ToList();
-        public Endereco Get(string id) => _collection.Find(c => c.Id == id).FirstOrDefault();
+        public Endereco Get(string id)
+        {
+            if (id == "" || id == "string") return null;
+            return _collection.Find(c => c.Id == id).FirstOrDefault();
+        }
 
         public Endereco Post(Endereco endereco)
         {
