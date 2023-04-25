@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using TurismoMongoDB.Config;
 using TurismoMongoDB.Models;
 
@@ -6,37 +7,42 @@ namespace TurismoMongoDB.Services
 {
     public class EnderecoService
     {
-        private readonly Context? _context = new();
+        private readonly IMongoCollection<Endereco> _collection;
 
         public EnderecoService(IMongoDBSettings settings)
         {
             var client = new MongoClient(settings.ConnectionString);
             var database = client.GetDatabase(settings.DatabaseName);
-            _context.Endereco = database.GetCollection<Endereco>(settings.EnderecoCollection);
-            _context.Cidade = database.GetCollection<Cidade>(settings.CidadeCollection);
+            _collection = database.GetCollection<Endereco>(settings.EnderecoCollection);
         }
 
-        public List<Endereco> Get() => _context.Endereco.Find(c => true).ToList();
-        public Endereco Get(string id) => _context.Endereco.Find(c => c.Id == id).FirstOrDefault();
+        public List<Endereco> Get() => _collection.Find(c => true).ToList();
+        public Endereco Get(string id) => _collection.Find(c => c.Id == id).FirstOrDefault();
 
-        public void Post(Endereco endereco)
+        public Endereco Post(Endereco endereco)
         {
-            var cidade = _context.Cidade.Find(c => c.Id == endereco.cidade.Id).FirstOrDefault();
-            if (cidade == null) _context.Cidade.InsertOne(endereco.cidade);
-            else endereco.cidade = cidade;
+            if (endereco.Id == "" || endereco.Id == "string") endereco.Id = BsonObjectId.GenerateNewId().ToString();
 
-            _context.Endereco.InsertOne(endereco);
+            Endereco enderecoExistente = _collection.Find(e => e.Id == endereco.Id).FirstOrDefault();
+            if (enderecoExistente != null)
+            {
+                endereco = enderecoExistente;
+                return endereco;
+            }
+
+            _collection.InsertOne(endereco);
+            return endereco;
         }
 
         public Endereco Update(Endereco endereco)
         {
-            _context.Endereco.ReplaceOne(e => e.Id == e.Id, endereco);
+            _collection.ReplaceOne(e => e.Id == e.Id, endereco);
             return endereco;
         }
 
         public void Delete(string id)
         {
-            _context.Endereco.DeleteOne(c => c.Id == id);
+            _collection.DeleteOne(c => c.Id == id);
         }
     }
 }

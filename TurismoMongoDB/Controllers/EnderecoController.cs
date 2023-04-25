@@ -11,10 +11,12 @@ namespace TurismoMongoDB.Controllers
     public class EnderecoController : ControllerBase
     {
         private readonly EnderecoService _enderecoService;
+        private readonly CidadeService _cidadeService;
 
-        public EnderecoController(EnderecoService enderecoService)
+        public EnderecoController(EnderecoService enderecoService, CidadeService cidadeService)
         {
             _enderecoService = enderecoService;
+            _cidadeService = cidadeService;
         }
 
         [HttpGet]
@@ -32,11 +34,10 @@ namespace TurismoMongoDB.Controllers
             return endereco;
         }
 
-        [HttpPost]
+        [HttpPost(Name = "PostCidade")]
         public ActionResult<Endereco> Post(Endereco endereco)
         {
-            if (endereco.Id == "string") endereco.Id = String.Empty;
-            if (endereco.cidade.Id == "string" || endereco.cidade.Id == String.Empty) endereco.cidade.Id = BsonObjectId.GenerateNewId().ToString();
+            endereco.cidade = _cidadeService.Post(endereco.cidade);
 
             _enderecoService.Post(endereco);
             return CreatedAtRoute("GetEndereco", new { id = endereco.Id }, endereco);

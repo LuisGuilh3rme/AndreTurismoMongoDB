@@ -11,15 +11,18 @@ namespace TurismoMongoDB.Controllers
     public class ClienteController : ControllerBase
     {
         private readonly ClienteService _clienteService;
+        private readonly EnderecoService _enderecoService;
+        private readonly CidadeService _cidadeService;
 
-        public ClienteController(ClienteService clienteService)
+        public ClienteController(ClienteService clienteService, EnderecoService enderecoService, CidadeService cidadeService)
         {
             _clienteService = clienteService;
+            _enderecoService = enderecoService;
+            _cidadeService = cidadeService;
         }
 
         [HttpGet]
         public ActionResult<List<Cliente>> Get() => _clienteService.Get();
-
 
         [HttpGet("{id:length(24)}", Name = "GetCliente")]
         public ActionResult<Cliente> Get(string id)
@@ -35,11 +38,10 @@ namespace TurismoMongoDB.Controllers
         [HttpPost]
         public ActionResult<Cliente> Post(Cliente cliente)
         {
-            if (cliente.Id == "string") cliente.Id = String.Empty;
-            if (cliente.endereco.Id == "string" || cliente.endereco.Id == String.Empty) cliente.endereco.Id = BsonObjectId.GenerateNewId().ToString();
-            if (cliente.endereco.cidade.Id == "string" || cliente.endereco.cidade.Id == String.Empty) cliente.endereco.cidade.Id = BsonObjectId.GenerateNewId().ToString();
-
+            cliente.endereco.cidade = _cidadeService.Post(cliente.endereco.cidade);
+            cliente.endereco = _enderecoService.Post(cliente.endereco);
             _clienteService.Post(cliente);
+
             return CreatedAtRoute("GetCliente", new { id = cliente.Id }, cliente);
         }
 
