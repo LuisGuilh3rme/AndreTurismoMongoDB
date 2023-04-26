@@ -40,6 +40,13 @@ namespace TurismoMongoDB.Services
 
         public Endereco Update(Endereco endereco)
         {
+            Endereco enderecoExistente = _collection.Find(e => e.Id == endereco.Id).FirstOrDefault();
+
+            if (endereco.Logradouro == "string") endereco.Logradouro = enderecoExistente.Logradouro;
+            if (endereco.Bairro == "string") endereco.Bairro = enderecoExistente.Bairro;
+            if (endereco.Numero == 0) endereco.Numero = enderecoExistente.Numero;
+            if (endereco.cidade.Id == "string") endereco.cidade.Id = enderecoExistente.cidade.Id;
+
             _collection.ReplaceOne(e => e.Id == e.Id, endereco);
             return endereco;
         }
