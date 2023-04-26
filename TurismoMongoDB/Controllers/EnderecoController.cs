@@ -32,7 +32,7 @@ namespace TurismoMongoDB.Controllers
             return endereco;
         }
 
-        [HttpPost(Name = "PostCidade")]
+        [HttpPost]
         public ActionResult<Endereco> Post(Endereco endereco)
         {
             endereco.cidade = _cidadeService.Post(endereco.cidade);
@@ -44,7 +44,6 @@ namespace TurismoMongoDB.Controllers
         [HttpPut("{id:length(24)}")]
         public ActionResult<Endereco> Update(string id, Endereco endereco)
         {
-            if (id == null) return NotFound();
             endereco.Id = id;
 
             if (_enderecoService.Get(endereco.Id) == null) return NotFound();

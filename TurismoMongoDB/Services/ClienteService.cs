@@ -41,6 +41,12 @@ namespace TurismoMongoDB.Services
 
         public Cliente Update(Cliente cliente)
         {
+            Cliente clienteExistente = _collection.Find(c => c.Id == cliente.Id).FirstOrDefault();
+
+            if (cliente.Nome == "string") cliente.Nome = clienteExistente.Nome;
+            if (cliente.CPF == "string") cliente.CPF = clienteExistente.CPF;
+            if (cliente.endereco.Id == "string") cliente.endereco = clienteExistente.endereco;
+
             _collection.ReplaceOne(c => c.Id == cliente.Id, cliente);
             return cliente;
         }
