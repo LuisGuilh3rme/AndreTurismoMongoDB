@@ -41,6 +41,11 @@ namespace TurismoMongoDB.Services
 
         public Cidade Update(Cidade cidade)
         {
+            Cidade cidadeExistente = _collection.Find(c => c.Id == cidade.Id).FirstOrDefault();
+
+            if (cidade.Nome == "string") cidade.Nome = cidadeExistente.Nome;            
+            cidade.DataRegistro = cidadeExistente.DataRegistro;       
+            
             _collection.ReplaceOne(c => c.Id == cidade.Id, cidade);
             return cidade;
         }
